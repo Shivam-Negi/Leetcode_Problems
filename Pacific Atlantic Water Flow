@@ -1,0 +1,57 @@
+class Solution {
+public:
+    
+    void dfs(int i, int j, int prev, vector<vector<int>>& heights,        
+                vector<vector<int>>& ocean) {
+        
+        int m = heights.size();
+        int n = heights[0].size();
+        
+        if(i<0 || j<0) return;
+        if(i >= m || j >= n) return;
+        if(ocean[i][j] == 1) return;
+        if(heights[i][j] < prev) return;
+
+        ocean[i][j] = 1;
+        
+        dfs(i+1, j, heights[i][j], heights, ocean);
+        dfs(i-1, j, heights[i][j], heights, ocean);
+        dfs(i, j+1, heights[i][j], heights, ocean);
+        dfs(i, j-1, heights[i][j], heights, ocean);
+    }
+    
+    vector<vector<int>> pacificAtlantic(vector<vector<int>>& heights) {
+        int m = heights.size();
+        int n = heights[0].size();
+        
+        vector <vector<int> > res;
+        
+        if(m < 1)
+            return res;
+        
+        vector <vector<int> > pacific(m,vector<int>(n, 0));
+        vector <vector<int> > atlantic(m,vector<int>(n, 0));
+        
+        for(int row = 0; row < m; ++row){
+            dfs(row, 0, -1, heights, pacific);
+            dfs(row, n-1, -1, heights, atlantic);
+        }
+        
+        for(int col = 0; col < n; ++col){
+            dfs(0, col, -1, heights, pacific);
+            dfs(m-1, col, -1, heights, atlantic);
+        }
+        
+        for(int i = 0; i<m; ++i){
+            for(int j = 0; j<n; ++j){
+                if(pacific[i][j] == 1 && atlantic[i][j] == 1){
+                    vector <int> cell;
+                    cell.push_back(i);
+                    cell.push_back(j);
+                    res.push_back(cell);
+                }
+            }
+        }
+        return res;
+    }
+};
