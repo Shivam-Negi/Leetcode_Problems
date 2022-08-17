@@ -1,0 +1,82 @@
+class Solution {
+public:
+    bool isPalindrome(string s) {
+            string str = "";
+    for(int i = 0; i<s.size(); i++){
+         if(!isalnum(s[i])){   /* checking if alpha numric charcter like * , ! , # , % etc. if found do nothing simply skip */
+            continue;
+        }
+        else if(isalpha(s[i]) && isupper(s[i])){   // checking for upper case char if found then convert it into in lower case using to lower case keyword
+            
+            str += tolower(s[i]);
+        }
+        else{
+            str += s[i];
+        }
+    
+    }
+ //  cout<<str<<" ";
+ //creating a new string and copying value to it 
+ 
+    string ab = str;
+	
+    //reverse the string 
+   reverse(str.begin() , str.end());
+   
+   //checking if both the string is same or not
+    return (ab==str);
+
+    }
+};
+
+
+
+OR
+
+
+class Solution {
+    private:
+    bool valid(char ch){
+        if( (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9') )
+            return true;
+        
+        else
+            return false;
+    }
+    char lower(char ch){
+        if( (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9') )
+            return ch;
+        
+        else
+            return ch - 'A' + 'a';
+    }
+    bool chkpall(string a){
+        int start = 0, e = a.length() - 1;
+        while(start <= e){
+            if(a[start] != a[e])
+                return false;
+            
+            else{
+                ++start;
+                --e;
+            }
+        }
+        return true;
+    }
+public:
+    bool isPalindrome(string s) {
+        string str = "";
+        // remove unnecessary characters
+        for(int i = 0; i<s.length(); ++i){
+            if(valid(s[i]))
+                str.push_back(s[i]);
+        }
+        // converting to lowercase
+        for(int i = 0; i<str.length(); ++i){
+                str[i] = lower(str[i]);
+        }
+        // to check pallindrome
+       // cout << str;
+        return chkpall(str);
+    }
+};
