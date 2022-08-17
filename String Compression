@@ -1,0 +1,33 @@
+class Solution {
+public:
+    int compress(vector<char>& chars) {
+    int n = chars.size();
+    int i = 0;  //initial character
+    int ansIndex = 0;
+    
+    while(i < n){
+        
+        int j = i + 1;  //next character
+        
+        while(j<n && chars[i] == chars[j]){ //if character matches, increment j
+            ++j;
+        }
+        
+        chars[ansIndex] = chars[i];  //store the previous character 
+        ++ansIndex;
+        int cnt = j - i;                 //followed by its count
+        
+        if(cnt > 1){
+            
+            string s = to_string(cnt);
+            
+            for(char &ch : s){
+                chars[ansIndex] = ch;
+                ++ansIndex;
+            }
+        }
+        i = j;  //update i to nextChar i.e. j
+    }
+    return ansIndex;
+    }
+};
