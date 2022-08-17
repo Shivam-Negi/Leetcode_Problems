@@ -18,3 +18,37 @@ public:
     return subsets;
     }
 };
+
+
+
+OR
+
+
+
+class Solution {
+void solve(vector<int> nums, vector <int> &subset, int index, vector <vector<int> > &res){
+        
+        // base case
+        if(index >= nums.size()){
+            res.push_back(subset);
+            return;
+        }
+        // exclude
+        solve(nums, subset, index + 1, res);
+        
+        // include
+        int elem = nums[index];
+        subset.push_back(elem);
+        solve(nums, subset, index + 1, res);
+        subset.pop_back();       
+    }
+    
+public:
+    vector<vector<int>> subsets(vector<int>& nums) {
+        vector <vector<int> > res;
+        vector <int> subset;
+        int index = 0;
+        solve(nums, subset, index, res);
+        return res;
+    }
+};
