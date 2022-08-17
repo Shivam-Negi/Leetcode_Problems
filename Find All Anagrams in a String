@@ -1,0 +1,32 @@
+class Solution {
+public:
+    vector<int> findAnagrams(string s, string p) {
+        vector <int> res;
+        if(p.size() > s.size())
+            return res;
+        
+        vector <int> strP(26,0);
+        for(auto c : p){
+            strP[c - 'a']++;
+        }
+        vector <int> strS(26,0);
+        int l = 0, r = 0;
+        
+        while(r < s.size()){
+            strS[s[r] - 'a']++;
+            if(r - l + 1 == p.size()){
+                if(strP == strS)
+                    res.push_back(l);
+            }
+            if(r - l + 1 < p.size())
+                r++;
+            
+            else{
+                strS[s[l] - 'a']--;
+                l++;
+                r++;
+            }
+        }
+        return res;
+    }
+};
