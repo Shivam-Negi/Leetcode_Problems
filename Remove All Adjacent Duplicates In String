@@ -1,0 +1,49 @@
+STACK use....
+
+class Solution {
+public:
+    string removeDuplicates(string s) {
+    stack <char> st;
+	for( char &ch : s){
+		if(st.empty())
+			st.push(ch);
+
+		else{
+			if(st.top() == ch)
+				st.pop();
+
+			else
+				st.push(ch);
+		}
+	}
+	string res;
+    while(!st.empty()){
+        res += st.top();
+        st.pop();
+    }
+        reverse(res.begin(),res.end());
+        return res;
+    }
+};
+
+
+2nd approach:
+
+
+class Solution {
+public:
+    string removeDuplicates(string s) {
+    string ans;  
+        for(char &i : s)  
+        {
+            if(ans.length() == 0) 
+                ans.push_back(i);  
+            
+            else if(i == ans.back()) 
+                ans.pop_back(); 
+            
+            else ans.push_back(i);
+        }
+        return ans;  
+    }
+};
