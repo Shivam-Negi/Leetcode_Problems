@@ -1,3 +1,6 @@
+Striver's explanation....
+
+
 class Solution {
 public:
     int majorityElement(vector<int>& nums) {
