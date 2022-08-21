@@ -1,0 +1,17 @@
+class Solution {
+public:
+    vector<int> sortedSquares(vector<int>& nums) {
+        int n = nums.size();
+        vector <int> res(n);
+        int lo = 0, hi = n - 1;
+        for(int k = n - 1; k >= 0; --k){
+            if(abs(nums[lo]) > abs(nums[hi]))
+                res[k] = abs(nums[lo] * nums[lo++]);
+            
+            else
+                res[k] = abs(nums[hi] * nums[hi--]);
+            
+        }
+        return res;
+    }
+};
