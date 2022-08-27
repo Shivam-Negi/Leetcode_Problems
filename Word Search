@@ -6,9 +6,11 @@ public:
         if(i < 0 || j < 0) return false;
         if(i >= m || j >= n) return false;
         if(board[i][j] != word[k]) return false;
-        if(k >= l-1) return true;
         
         ++k;
+        
+        if(k >= l) return true;
+        
         char cur = board[i][j];
         board[i][j] = '@';
             
