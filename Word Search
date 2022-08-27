@@ -1,0 +1,42 @@
+class Solution {
+public:
+    int m, n, l;
+    bool dfs(vector<vector<char>> &board, string &word, int i, int j, int k){
+        
+        if(i < 0 || j < 0) return false;
+        if(i >= m || j >= n) return false;
+        if(board[i][j] != word[k]) return false;
+        if(k >= l-1) return true;
+        
+        ++k;
+        char cur = board[i][j];
+        board[i][j] = '@';
+            
+         bool ans = dfs(board, word, i-1, j, k)
+                    ||  dfs(board, word, i+1, j, k)
+                    ||  dfs(board, word, i, j-1, k)
+                    ||  dfs(board, word, i, j+1, k);
+        
+        board[i][j] = cur;
+        
+        return ans;
+        
+    }
+    
+    bool exist(vector<vector<char>>& board, string word) {
+        m = board.size();
+        n = board[0].size();
+        l = word.size();
+        
+        for(int i = 0; i < m; ++i){
+            for(int j = 0; j < n; ++j){
+                if(board[i][j] == word[0]){
+                    bool res = dfs(board, word, i, j, 0);
+                    if(res == true)
+                        return true;
+                }
+            }
+        }
+       return false; 
+    }
+};
