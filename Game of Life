@@ -1,0 +1,51 @@
+class Solution {
+public:
+    int m, n;   //   m x n grid...
+    
+    // all the 8 positions we need to check...
+    
+    vector<pair<int, int> > movements = {
+	{-1, 0}, {1, 0},
+	{-1, -1},{-1, 1},
+	{0, -1}, {0, 1},
+	{1, -1}, {1, 1}
+};
+ 
+    //this is to check if the position is valid( i.e. not out of the grid)...
+    
+    bool isValid(int x, int y){
+	return x >= 0 && y >=  0 && x < m && y < n;
+}
+    
+    void gameOfLife(vector<vector<int>>& board) {
+        m = board.size();
+        n = board[0].size();
+        
+        vector<vector<int>> res = board;
+        
+        for(int i = 0; i < m; ++i){
+            for(int j = 0; j < n; ++j){
+                
+                int ct = 0;   // it will store no. of live neighbours...
+                for(auto movement : movements){
+                    int x = i + movement.first;
+                    int y = j + movement.second;
+                    if(isValid(x, y)){
+                        if(res[x][y] == 1){
+                                ++ct;
+                        }
+                    }
+                }
+               if(res[i][j] == 0){
+                   if(ct == 3)
+                       board[i][j] = 1;
+               }
+                else{
+                    if(ct < 2 || ct > 3)
+                        board[i][j] = 0;
+                }
+            }
+        }
+        
+    }
+};
