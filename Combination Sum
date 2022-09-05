@@ -1,0 +1,29 @@
+class Solution {
+public:
+    vector <vector<int> > res;
+    
+    void find(int index, int target, vector <int>& comb, vector<int>& cand){
+        if(index == cand.size()){
+            if(target == 0){
+                res.push_back(comb);
+            }
+            return;
+        }
+        
+        // pick a element
+        if(cand[index] <= target){
+            comb.push_back(cand[index]);
+            find(index, target - cand[index], comb, cand);
+            comb.pop_back();
+        }
+        
+        // not pick
+        find(index + 1, target, comb, cand);
+    }
+    
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        vector <int> comb;
+        find(0, target, comb, candidates);
+        return res;
+    }
+};
