@@ -1,0 +1,70 @@
+BFS....
+
+class Solution {
+    
+    bool checkBfs(int node, int v, vector<int>& color, vector<vector<int>>& graph) {
+        color[node] = 0;
+        queue <int> q;
+        q.push(node);
+        while(!q.empty()){
+            int par = q.front();
+            q.pop();
+            for(auto child : graph[par]){
+                if(color[child] == -1){
+                    color[child] = !color[par];
+                    q.push(child);
+                }
+                else if(color[child] == color[par])
+                    return false;
+            }
+        }
+        return true;
+    }
+    
+public:
+    bool isBipartite(vector<vector<int>>& graph) {
+        int v = graph.size();
+        vector <int> color(v, -1);
+        for(int i = 0; i < v; ++i){
+            if(color[i] == -1){
+                if(checkBfs(i, v, color, graph) == false)
+                    return false;
+            }
+        }
+        return true;
+    }
+};
+
+
+DFS......
+
+class Solution {
+    
+    bool chkDfs(int node, int col, vector<int>& color, vector<vector<int>>& graph) {
+        color[node] = col;
+        
+        for(auto child : graph[node]){
+            if(color[child] == -1){
+                if(chkDfs(child, !col, color, graph) == false)
+                    return false;
+            }
+            else if(color[child] == col)
+                return false;
+        }
+        return true;
+    }
+    
+public:
+    bool isBipartite(vector<vector<int>>& graph) {
+        int v = graph.size();
+        vector<int> color(v, -1);
+        
+        for(int i = 0; i < v; ++i){
+            if(color[i] == -1){
+                if(chkDfs(i, 0, color, graph) == false)
+                    return false;
+            }
+        }
+        return true;
+    }
+};
