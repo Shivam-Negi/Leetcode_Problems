@@ -1,0 +1,38 @@
+class Solution {
+    int V;
+    bool chkDfs(int node, vector <int>& vis, vector <int>& path, vector<vector<int>>& adj){
+    vis[node] = 1;
+    path[node] = 1;
+    
+    for(auto child : adj[node]){
+        if(!vis[child]){
+            if(chkDfs(child, vis, path, adj) == true)
+                    return true;
+            }
+            else if(path[child])
+                return true;
+        }
+        
+        path[node] = 0;
+        return false;
+    }
+    
+public:
+    vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
+        V = graph.size();
+        vector <int> vis(V, 0);
+        vector <int> path(V, 0);
+        
+        for(int i = 0; i < V; ++i){
+            if(!vis[i]){
+                chkDfs(i, vis, path, graph);
+            }
+        }
+        vector <int> ans;
+        for(int i = 0; i < V; ++i){
+            if(!path[i])
+                ans.push_back(i);
+        }
+        return ans;
+    }
+};
