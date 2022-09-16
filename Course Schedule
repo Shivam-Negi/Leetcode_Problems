@@ -1,0 +1,37 @@
+class Solution {
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        
+        int N = numCourses;
+        // creating a directed graph
+	    vector <int> adj[N];
+	    for(auto it : prerequisites){                     //  {1, 0}
+	        adj[it[0]].push_back(it[1]);                  //  1  -->  0     
+	    }                                                 //  u  -->  v
+	    
+	    vector <int> inDegree(N, 0);
+	    for(int i = 0; i < N; ++i){
+	        for(auto child : adj[i]){
+	            inDegree[child]++;
+	        }
+	    }
+	    queue <int> q;
+	    for(int i = 0; i < N; ++i){
+	        if(inDegree[i] == 0)
+	            q.push(i);
+	    }
+	    
+	    vector <int> topo;
+	    while(!q.empty()){
+	        int node = q.front();
+	        q.pop();
+	        topo.push_back(node);
+	        for(auto child : adj[node]){
+	            inDegree[child]--;
+	            if(inDegree[child] == 0)
+	                q.push(child);
+	        }
+	    }
+	    return (topo.size() == N);
+    }
+};
