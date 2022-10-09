@@ -1,0 +1,49 @@
+class Solution {
+    
+    int n;
+    
+    bool isValid(int x, int y){
+	return x >= 0 && y >=  0 && x < n && y < n;
+}
+
+vector<pair<int, int>> movements = {
+	{-1, 0}, {1, 0}, {0, -1}, {0, 1},
+	{-1, -1}, {-1, 1}, {1, -1}, {1, 1}
+};
+    
+public:
+    int shortestPathBinaryMatrix(vector<vector<int>>& grid) {
+        n = grid.size();
+        
+        if(grid[0][0] == 1 || grid[n-1][n-1] == 1)
+            return -1;
+        
+        queue<pair<int,int>> q;
+        vector<vector<int>> dist(n, vector<int>(n, 1e9));
+        vector<vector<int>> vis(n, vector<int>(n, 0));
+        
+	    q.push({0, 0});
+	    vis[0][0] = 1;
+	    dist[0][0] = 1;
+	    
+	    while(!q.empty()){
+		auto v = q.front();
+		int x = v.first, y = v.second;
+		q.pop();
+		for( auto movement : movements){
+			int childX = movement.first + x;
+			int childY = movement.second + y;
+			if(!isValid(childX, childY) || grid[childX][childY] != 0)
+				continue;
+		    if(!vis[childX][childY]){
+		        q.push({childX, childY});
+		        dist[childX][childY] = dist[x][y] + 1;
+		        vis[childX][childY] = 1;
+		    }
+		}
+		if(dist[n-1][n-1] != 1e9)
+			return dist[n-1][n-1];
+	}
+	return -1;
+    }
+};
