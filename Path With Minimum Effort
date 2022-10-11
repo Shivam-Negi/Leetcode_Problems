@@ -1,0 +1,54 @@
+class Solution {
+    
+    int n, m;
+    
+    vector <pair <int, int> > movements = {
+	{0, 1}, {0, -1}, {1, 0}, {-1, 0},
+};
+    
+    bool isValid(int i , int j) {
+	return i >= 0 && j >= 0 && i < n && j < m;
+}
+    
+public:
+    int minimumEffortPath(vector<vector<int>>& heights) {
+        
+        n = heights.size();
+        m = heights[0].size();
+        
+        vector<vector<int>> dist(n, vector<int>(m, 1e9));
+        dist[0][0] = 0;
+        
+        set<pair<int, pair<int,int>>> st;      // { diff, {row, col} }
+        st.insert({0, {0, 0}});
+        
+        while(st.size() > 0){
+            auto it = *st.begin();
+            
+            int diff = it.first;
+            auto cell = it.second;
+            
+            int row = cell.first;
+            int col = cell.second;
+            
+            if(row == n-1 && col == m-1)
+                return diff;
+            
+            st.erase(st.begin());
+            
+            for( auto movement : movements) {
+			    int newR = movement.first + row;
+			    int newC = movement.second + col;
+			    if(!isValid(newR, newC))
+			    	continue;
+			    
+			    int newEffort = max(abs(heights[row][col] - heights[newR][newC]), diff);
+			    if(newEffort < dist[newR][newC]){
+			        dist[newR][newC] = newEffort;
+			        st.insert({newEffort, {newR, newC} });
+			    }
+            }
+        }
+        return 0;
+    }
+};
