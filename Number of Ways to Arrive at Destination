@@ -1,0 +1,44 @@
+class Solution {
+    const int M = 1e9 + 7 ;
+public:
+    int countPaths(int n, vector<vector<int>>& roads) {
+        
+        vector <pair<int, int>> g[n];
+        for(auto &it : roads){
+            g[it[0]].push_back({it[1], it[2]});
+            g[it[1]].push_back({it[0], it[2]});
+        }
+        
+        vector <long long> ways(n, 0);
+        vector <long long> time(n, LONG_MAX);
+        ways[0] = 1;
+        time[0] = 0;
+        
+        set <pair<long long, int>> s;            //  < time , node >
+        s.insert({0, 0});
+        
+        while(s.size() > 0){
+            auto it = *s.begin();
+            
+            long long tm = it.first;
+            int node = it.second;
+            
+            s.erase(s.begin());
+            
+            for(auto child : g[node]){
+                int child_node = child.first;
+                int child_time = child.second;
+                
+                if(tm + child_time < time[child_node]){
+                    time[child_node] = (tm + child_time);
+                    s.insert({tm + child_time, child_node});
+                    ways[child_node] = ways[node];
+                }
+                else if(tm + child_time == time[child_node]){
+                    ways[child_node] = (ways[child_node] + ways[node]) % M;
+                }
+            }
+        }
+        return (ways[n-1]);
+    }
+};
