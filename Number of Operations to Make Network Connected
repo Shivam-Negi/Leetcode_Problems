@@ -1,0 +1,61 @@
+class DisjointSet {
+public:
+    vector <int> size, parent;
+	DisjointSet(int n){
+		size.resize(n+1, 1);
+		parent.resize(n+1);
+		for(int i = 0; i < n; ++i){
+			parent[i] = i;
+		}
+	}
+
+	int find_U_par(int node){
+		if(node == parent[node])
+			return node;
+
+		return parent[node] = find_U_par(parent[node]);
+	}
+
+	void unionBySize(int u, int v){
+		int ulp_u = find_U_par(u);    // ultimate parent finding
+		int ulp_v = find_U_par(v);
+
+		if(ulp_u == ulp_v)     // already connected
+			return;
+
+		if(size[ulp_u] < size[ulp_v]){
+			parent[ulp_u] = ulp_v;
+			size[ulp_v] += size[ulp_u];
+		}
+		else{
+			parent[ulp_v] = ulp_u;
+			size[ulp_u] += size[ulp_v];
+		}
+	}
+};
+
+class Solution {
+public:
+    int makeConnected(int n, vector<vector<int>>& connections) {
+        DisjointSet ds(n);
+        int ctExtras = 0;           //  extra edges
+        for(auto it : connections){
+            int u = it[0];
+            int v = it[1];
+            if(ds.find_U_par(u) == ds.find_U_par(v))
+                ++ctExtras;
+            else
+                ds.unionBySize(u, v);
+        }
+        int ct = 0;     // connected comp
+        for(int i = 0; i < n; ++i){
+            if(ds.parent[i] == i)
+                ++ct;
+        }
+        int ans = ct - 1;         // minimum edges reqd
+        if(ctExtras >= ans)
+            return ans;
+        else
+            return -1;
+    }
+};
