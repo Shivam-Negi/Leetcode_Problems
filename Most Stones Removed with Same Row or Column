@@ -1,0 +1,65 @@
+class DisjointSet {
+public:
+	vector <int> size, parent;
+	DisjointSet(int n){
+		size.resize(n+1, 1);
+		parent.resize(n+1);
+		for(int i = 0; i < n; ++i){
+			parent[i] = i;
+		}
+	}
+
+	int find_U_par(int node){
+		if(node == parent[node])
+			return node;
+
+		return parent[node] = find_U_par(parent[node]);
+	}
+
+	void unionBySize(int u, int v){
+		int ulp_u = find_U_par(u);    // ultimate parent finding
+		int ulp_v = find_U_par(v);
+
+		if(ulp_u == ulp_v)     // already connected
+			return;
+
+		if(size[ulp_u] < size[ulp_v]){
+			parent[ulp_u] = ulp_v;
+			size[ulp_v] += size[ulp_u];
+		}
+		else{
+			parent[ulp_v] = ulp_u;
+			size[ulp_u] += size[ulp_v];
+		}
+	}
+};
+
+class Solution {
+public:
+    int removeStones(vector<vector<int>>& stones) {
+        int n = stones.size();             // no. of stones
+        int mxrow = 0, mxcol = 0;     // last row and last col in which a stone is present
+        for(auto it : stones){
+            mxrow = max(mxrow, it[0]);
+            mxcol = max(mxcol, it[1]);
+        }
+        int nodes = (mxrow + 1) + (mxcol + 1);    // since indexing starts from 0.
+        DisjointSet ds(nodes);
+        
+        // connecting those rows and cols which contains stones
+        for(auto it : stones){
+            int nodeRow = it[0];
+            int nodeCol = mxrow + it[1] + 1;
+            ds.unionBySize(nodeRow, nodeCol);
+        }
+
+        // removing those nodes which don't have any stones
+        int components = 0;
+        for(int i = 0; i < nodes; ++i){
+            if(ds.parent[i] == i && ds.size[i] > 1)
+            ++components;
+        }
+
+        return (n - components);         // after deriving from the qs.
+    }
+};
