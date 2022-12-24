@@ -1,0 +1,91 @@
+class DisjointSet {
+public:
+	vector <int> size, parent;
+	DisjointSet(int n){
+		size.resize(n+1, 1);
+		parent.resize(n+1);
+		for(int i = 0; i < n; ++i){
+			parent[i] = i;
+		}
+	}
+
+	int find_U_par(int node){
+		if(node == parent[node])
+			return node;
+
+		return parent[node] = find_U_par(parent[node]);
+	}
+
+	void unionBySize(int u, int v){
+		int ulp_u = find_U_par(u);    // ultimate parent finding
+		int ulp_v = find_U_par(v);
+
+		if(ulp_u == ulp_v)     // already connected
+			return;
+
+		if(size[ulp_u] < size[ulp_v]){
+			parent[ulp_u] = ulp_v;
+			size[ulp_v] += size[ulp_u];
+		}
+		else{
+			parent[ulp_v] = ulp_u;
+			size[ulp_u] += size[ulp_v];
+		}
+	}
+};
+
+class Solution {
+    bool isValid(int i, int j, int n){
+        return i >= 0 && j >= 0 && i < n && j < n;
+    }
+public:
+    int largestIsland(vector<vector<int>>& grid) {
+        int n  = grid.size();
+        int nodes = n * n;
+        DisjointSet ds(nodes);
+
+        // step 1 -> creating disjoint set
+        for(int row = 0; row < n; ++row){
+            for(int col = 0; col < n; ++col){
+                if(grid[row][col] == 0)
+                    continue;
+                int dr[] = {-1, 0, 1, 0};
+                int dc[] = {0, -1, 0, 1};
+                for(int idx = 0; idx < 4; ++idx){
+                    int newr = dr[idx] + row;
+                    int newc = dc[idx] + col;
+                    if(isValid(newr, newc, n) && grid[newr][newc] == 1){
+                        int nodeNo = row * n + col;
+                        int adjNode = newr * n + newc;
+                        ds.unionBySize(nodeNo, adjNode);
+                    }  
+                }
+            }
+        }
+        int mx = 0;   
+        // step 2 -> storing the size by converting 0's to 1
+        for(int row = 0; row < n; ++row){
+            for(int col = 0; col < n; ++col){
+                if(grid[row][col] == 1)
+                    continue;
+                set <int> components;           // to store unique ultimate parents 
+                int dr[] = {-1, 0, 1, 0};
+                int dc[] = {0, -1, 0, 1};
+                for(int idx = 0; idx < 4; ++idx){
+                    int newr = dr[idx] + row;
+                    int newc = dc[idx] + col;
+                    if(isValid(newr, newc, n) && grid[newr][newc] == 1)
+                        components.insert(ds.find_U_par(newr * n + newc));
+                }
+                int totSize = 1;      // 1 bcoz first that 0 will be counted
+                for(auto it : components){
+                    totSize += ds.size[it];
+                }
+                mx = max(mx, totSize);
+            }
+        }
+        // edge case if there are no 0's
+        mx = max(mx, ds.size[ds.find_U_par(0)]);
+        return mx;
+    }
+};
